@@ -1,10 +1,8 @@
-
 {
-    name: "nginx",
-    desc: "nginx [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP proxy server",
-    homepage: "http://nginx.org",
-    url: "http://nginx.org/en/download.html",
-    pattern: "",
-    parser: "peg"
-
+    "name": "nginx",
+    "desc": "nginx [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP proxy server",
+    "homepage": "http://nginx.org",
+    "url": "http://nginx.org/en/download.html",
+    "pattern": "(?s).+Stable.+?CHANGES\-(?<version>[0-9\.]+)",
+    "engine": "nre"
 }
