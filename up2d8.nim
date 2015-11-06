@@ -12,8 +12,6 @@ type
 
   EngineNotFoundException = IOError
 
-
-
 proc getFormula(name: string): Formula =
   let file = "formula/$#.json" % name
   if not fileExists(file):
@@ -35,6 +33,6 @@ proc getVersion(formula: Formula): string =
 
 
 when isMainModule:
-  var f = getFormula("nginx")
+  var f = getFormula("h2o")
 
   echo getVersion(f)

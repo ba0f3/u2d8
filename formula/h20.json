@@ -1,8 +1,0 @@
-{
-    "name": "h20",
-    "desc": "H2O the optimized HTTP/1.x, HTTP/2 server",
-    "homepage": "https://h2o.examp1e.net",
-    "url": "http://nginx.org/en/download.html",
-    "pattern": "(?s).+Stable.+?CHANGES\-(?<version>[0-9\.]+)",
-    "engine": "nre"
-}
