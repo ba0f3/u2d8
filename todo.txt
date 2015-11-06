@@ -1,0 +1,4 @@
+- up2d8: main program for version checking and database updating
+- up2d8-scgi: web interface for user to browse and manage software they are using
+- up2d8-api: api for mobile apps
+- up2d8-ns: mobile apps
