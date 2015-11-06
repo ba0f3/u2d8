@@ -1,4 +1,4 @@
-import pegs, marshal, q, options, os, strutils, httpclient, nre
+import pegs, marshal, q, options, os, strutils, httpclient, nre, tables
 
 
 type
@@ -11,12 +11,12 @@ type
     engine: string
 
   EngineNotFoundException = IOError
+  FormulaNotFoundEception = IOError
 
-proc getFormula(name: string): Formula =
-  let file = "formula/$#.json" % name
-  if not fileExists(file):
-    raise newException(IOError, "Formula file $# does not exist" % file)
-  result = to[Formula](readFile(file))
+proc getFormula(path: string): Formula =
+  if not fileExists(path):
+    raise newException(FormulaNotFoundEception, "Formula file $# does not exist" % path)
+  result = to[Formula](readFile(path))
 
 proc getVersion(formula: Formula): string =
   result = ""
@@ -32,7 +32,18 @@ proc getVersion(formula: Formula): string =
     raise newException(EngineNotFoundException, "Engine $# is not defined yet" % formula.engine)
 
 
-when isMainModule:
-  var f = getFormula("h2o")
+proc update() =
+  ## Load all defined formulas for syntax checking...
+  var
+    formulas = initTable[string, Formula]()
+    formula: Formula
 
-  echo getVersion(f)
+  for file in walkFiles("formula/*.json"):
+      formula = getFormula(file)
+      formulas[formula.name] = formula
+
+
+#    echo formula.name, ", ", getVersion(formula)
+
+when isMainModule:
+  update()
