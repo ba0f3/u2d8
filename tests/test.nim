@@ -1,10 +1,20 @@
-import nre, options
+import ../private/models
+import ../private/rethinkengine
+import marshal
+import ../../rethinkdb.nim/rethinkdb
+import tables
+import json
+import asyncdispatch
 
-#let pattern = ".+ 'Stable version' .+ '/CHANGES-' {.*} .+"
-#let pattern = "Stable.*?CHANGES-([0-9\\.]+)"
 
-let html = readFile("nginx.html")
+var r = newRethinkClient()
+waitFor r.connect()
 
-let m = html.match(re"(?s).+Stable.+?CHANGES\-(?<version>[0-9\.]+)")
-if isSome(m):
-  echo m.unsafeGet().captures["version"]
+var soft: Software
+
+soft.id = "nginx"
+soft.name = "nginx"
+
+r.save(soft)
+
+r.close()
