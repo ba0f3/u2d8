@@ -17,13 +17,18 @@ before_script:
   - sh build.sh
   - cd ..
   - sed -i -e 's,cc = gcc,cc = clang,' config/nim.cfg
-  - export PATH=$(pwd)/Nim/bin:$PATH
-
+  - export PATH=$(pwd)/bin:$PATH
   - nim c koch
   - ./koch boot
   - ./koch boot -d:release
   - nim e install_nimble.nims
+  - cd ..
+  - git clone https://github.com/nim-lang/nimble.git
+  - cd nimble
+  - nim c -r src/nimble install
+  - export PATH=~/.nimble/bin:$PATH
   - nimble update
   - cd ..
 script:
+  - nimble build
   - nim c -d:release -r up2d8.nim
