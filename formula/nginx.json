@@ -2,6 +2,7 @@
     "name": "nginx",
     "desc": "nginx [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP proxy server",
     "homepage": "http://nginx.org",
+    "tags": ["web", "server", "http", "proxy"],
     "url": "http://nginx.org/en/download.html",
     "pattern": "(?s).+Stable.+?CHANGES\-[VERSION]",
     "engine": "nre"

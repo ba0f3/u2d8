@@ -2,6 +2,7 @@
     "name": "keepassx",
     "desc": "KeePassX - cross platform password manager",
     "homepage": "https://www.keepassx.org",
+    "tags": ["password", "manager", "linux", "windows", "osx"],
     "url": "https://www.keepassx.org",
     "pattern": "(?s).+Latest version:\s+[VERSION]",
     "engine": "nre"

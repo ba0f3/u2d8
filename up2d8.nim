@@ -8,6 +8,7 @@ type
     name: string
     desc: string
     homepage: string
+    tags: seq[string]
     url: string
     pattern: string
     engine: string

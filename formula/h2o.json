@@ -2,6 +2,7 @@
     "name": "h2o",
     "desc": "H2O the optimized HTTP/1.x, HTTP/2 server",
     "homepage": "https://h2o.examp1e.net",
+    "tags": ["http", "server", "web"],
     "url": "https://h2o.examp1e.net",
     "pattern": "(?s).+News<\/h3>\s+<ul>\s+<li>Version.*?>[VERSION]<\/a>",
     "engine": "nre"
