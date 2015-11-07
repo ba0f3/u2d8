@@ -1,0 +1,8 @@
+{
+    "name": "keepassx",
+    "desc": "KeePassX - cross platform password manager",
+    "homepage": "https://www.keepassx.org",
+    "url": "https://www.keepassx.org",
+    "pattern": "(?s).+Latest version:\s+[VERSION]",
+    "engine": "nre"
+}
