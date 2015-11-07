@@ -1,5 +1,7 @@
 import pegs, marshal, q, options, os, strutils, httpclient, nre, tables
 
+const
+  NRE_VERSION_PATTERN = r"(?<version>\d+(?:\.\d+)+)"
 
 type
   Formula = object
@@ -18,12 +20,15 @@ proc getFormula(path: string): Formula =
     raise newException(FormulaNotFoundEception, "Formula file $# does not exist" % path)
   result = to[Formula](readFile(path))
 
+  if result.url == "":
+    raise newException(ValueError, "URL for $# cannot be null or empty" % result.name)
+
 proc getVersion(formula: Formula): string =
   result = ""
-  let content = getContent(formula.url)
 
+  let content = getContent(formula.url)
   if formula.engine == "nre":
-    let m = content.match(re(formula.pattern))
+    let m = content.match(re(replace(formula.pattern, "[VERSION]", NRE_VERSION_PATTERN)))
     if isSome(m):
       result = m.unsafeGet().captures["version"]
     else:
@@ -31,19 +36,19 @@ proc getVersion(formula: Formula): string =
   else:
     raise newException(EngineNotFoundException, "Engine $# is not defined yet" % formula.engine)
 
-
-proc update() =
+proc loadForumlas(): Table[string, Formula] =
   ## Load all defined formulas for syntax checking...
-  var
-    formulas = initTable[string, Formula]()
-    formula: Formula
+  result = initTable[string, Formula]()
+  var formula: Formula
 
   for file in walkFiles("formula/*.json"):
-      formula = getFormula(file)
-      formulas[formula.name] = formula
+    formula = getFormula(file)
+    result[formula.name] = formula
 
-
-#    echo formula.name, ", ", getVersion(formula)
+proc update() =
+  var formulas = loadForumlas()
+  for f in formulas.values():
+    echo f.name, " => ", getVersion(f)
 
 when isMainModule:
   update()
