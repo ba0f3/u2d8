@@ -32,4 +32,4 @@ before_script:
   - cd ..
 script:
   - nimble build
-  - nim c -d:release -r up2d8.nim
+  - nim c -d:pcreDynlib -d:release -r up2d8.nim
