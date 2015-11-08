@@ -10,6 +10,8 @@ proc `&`*(a: Any): MutableDatum =
     &getBool(a)
   of akChar:
     &($getChar(a))
+  of akEnum:
+    &(getEnumOrdinal(a, getEnumField(a)))
   of akArray, akSequence:
     if a.kind == akSequence and isNil(a):
       nil
@@ -19,7 +21,6 @@ proc `&`*(a: Any): MutableDatum =
         tmp.add(&a[i])
       &tmp
   of akObject, akTuple:
-    echo name(type(a))
     var tmp = newTable[string, MutableDatum]()
     for key, val in fields(a):
       tmp[key] = &val

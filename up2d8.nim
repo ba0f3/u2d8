@@ -1,8 +1,7 @@
 import pegs, marshal, q, options, os, strutils, httpclient, nre, tables, times, asyncdispatch
 import rethinkdb
 
-#import private/shared/db.nim
-import private/rethinengine.nim
+#import private/rethinkengine.nim
 
 const
   NRE_VERSION_PATTERN = r"(?<version>\d+(?:\.\d+)+)"
@@ -51,16 +50,16 @@ proc loadForumlas(): Table[string, Formula] =
     result[formula.name] = formula
 
 proc update() =
-  var r = newRethinkclient()
-  waitFor r.connect()
+  #var r = newRethinkclient()
+  #waitFor r.connect()
 
   var formulas = loadForumlas()
   for k, f in formulas.pairs():
-    var s = &*{"id": k, "name":  f.name, "description": f.desc, "homepage": f.homepage, "tags": f.tags, "version": "0.1.0", "lastCheckedAt": getLocalTime(getTime())}
-    #echo f.name, " => ", getVersion(f)
-    discard waitFor r.table("Software").insert([s]).run(r)
+    #var s = &*{"id": k, "name":  f.name, "description": f.desc, "homepage": f.homepage, "tags": f.tags, "version": "0.1.0", "lastCheckedAt": getLocalTime(getTime())}
+    echo f.name, " => ", getVersion(f)
+    #discard waitFor r.table("Software").insert([s]).run(r)
 
-  r.close()
+  #r.close()
 
 when isMainModule:
   update()
