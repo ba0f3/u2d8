@@ -2,6 +2,7 @@ sudo: false
 language: c
 os:
   - linux
+  - osx
 addons:
   apt:
     packages:
@@ -9,7 +10,9 @@ addons:
     - libsdl1.2-dev
     - libgc-dev
     - libpcre3-dev
+
 before_script:
+  - "if [ ${TRAVIS_OS_NAME:-'linux'} = 'osx' ]; then . ./ci/travis/before_install-osx.sh; fi"
   - set -e
   - git clone -b devel --depth 1 git://github.com/nim-lang/Nim.git
   - cd Nim
@@ -17,7 +20,7 @@ before_script:
   - cd csources
   - sh build.sh
   - cd ..
-  - sed -i -e 's,cc = gcc,cc = clang,' config/nim.cfg
+#  - sed -i -e 's,cc = gcc,cc = clang,' config/nim.cfg
   - export PATH=$(pwd)/bin:$PATH
   - nim c koch
   - ./koch boot
@@ -32,4 +35,4 @@ before_script:
   - cd ..
 script:
   - nimble build
-  - nim c -d:pcreDynlib -d:release -r up2d8.nim
+  - nim c -d:usePcreHeader -r up2d8.nim

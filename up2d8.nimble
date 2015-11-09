@@ -6,4 +6,4 @@ description   = "Keep tracks of software versions"
 license       = "MIT"
 
 [Deps]
-Requires: "nim >= 0.10.0, q, rethinkdb"
+Requires: "nim >= 0.10.0, q, rethinkdb >= 0.1.1"
