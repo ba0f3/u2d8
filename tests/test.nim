@@ -1,5 +1,5 @@
 import ../private/models
-import ../private/rethinkengine
+import ../../rethinkengine.nim/rethinkengine
 import marshal
 import ../../rethinkdb.nim/rethinkdb
 import tables
