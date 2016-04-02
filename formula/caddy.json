@@ -1,0 +1,9 @@
+{
+    "name": "caddy",
+    "desc": "The HTTP/2 web server with automatic HTTPS",
+    "homepage": "https://caddyserver.com/",
+    "tags": ["http2", "web", "server", "ssl", "https"],
+    "url": "https://caddyserver.com/download",
+    "pattern": "(?s).+Version\s[VERSION]",
+    "engine": "nre"
+}

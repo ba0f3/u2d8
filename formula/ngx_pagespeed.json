@@ -1,0 +1,9 @@
+{
+    "name": "ngx_pagespeed",
+    "desc": "Automatic PageSpeed optimization module for Nginx",
+    "homepage": "http://ngxpagespeed.com",
+    "tags": ["pagespeed", "nginx", "ngx", "optimizer"],
+    "url": "https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source",
+    "pattern": "(?s).+NPS_VERSION\=[VERSION]",
+    "engine": "nre"
+}

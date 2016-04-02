@@ -1,44 +1,21 @@
-import pegs, marshal, q, options, os, strutils, httpclient, nre, tables, times, asyncdispatch
-import rethinkdb
+import rethinkdb, xxhash, sam, os, strutils, tables, times, asyncdispatch
+import private/types, private/engines/engine_nre
 
-#import private/rethinkengine.nim
+#type
+#  fetchVersion*: proc(formula: Formula): string {.nimcall, gcsafe.}
 
-const
-  NRE_VERSION_PATTERN = r"(?<version>\d+(?:\.\d+)+)"
-
-type
-  Formula = object
-    name: string
-    desc: string
-    homepage: string
-    tags: seq[string]
-    url: string
-    pattern: string
-    engine: string
-
-  EngineNotFoundException = IOError
-  FormulaNotFoundEception = IOError
-
-proc getFormula(path: string): Formula =
+proc parseFormula(path: string): Formula =
   if not fileExists(path):
     raise newException(FormulaNotFoundEception, "Formula file $# does not exist" % path)
-  result = to[Formula](readFile(path))
-
-  if result.url == "":
-    raise newException(ValueError, "URL for $# cannot be null or empty" % result.name)
+  result.loads(readFile(path))
 
 proc getVersion(formula: Formula): string =
   result = ""
-
-  let content = getContent(formula.url)
-  if formula.engine == "nre":
-    let m = content.match(re(replace(formula.pattern, "[VERSION]", NRE_VERSION_PATTERN)))
-    if isSome(m):
-      result = m.unsafeGet().captures["version"]
-    else:
-      raise newException(ValueError, "Unable to find version for $#" % formula.name)
+  case formula.engine
+  of NRE:
+    result = engine_nre.fetchVersion(formula)
   else:
-    raise newException(EngineNotFoundException, "Engine $# is not defined yet" % formula.engine)
+    raise newException(EngineNotFoundException, "Engine $# is not defined yet" % $formula.engine)
 
 proc loadForumlas(): Table[string, Formula] =
   ## Load all defined formulas for syntax checking...
@@ -46,13 +23,10 @@ proc loadForumlas(): Table[string, Formula] =
   var formula: Formula
 
   for file in walkFiles("formula/*.json"):
-    formula = getFormula(file)
+    formula = parseFormula(file)
     result[formula.name] = formula
 
 proc update() =
-  #var r = newRethinkclient()
-  #waitFor r.connect()
-
   var formulas = loadForumlas()
   for k, f in formulas.pairs():
     #var s = &*{"id": k, "name":  f.name, "description": f.desc, "homepage": f.homepage, "tags": f.tags, "version": "0.1.0", "lastCheckedAt": getLocalTime(getTime())}
