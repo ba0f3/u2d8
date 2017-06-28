@@ -1,4 +1,4 @@
-import rethinkdb, xxhash, sam, os, strutils, tables, times, asyncdispatch
+import ../rethinkdb.nim/rethinkdb, sam, os, strutils, tables, times, asyncdispatch
 import private/types, private/engines/engine_nre
 
 #type
@@ -6,7 +6,7 @@ import private/types, private/engines/engine_nre
 
 proc parseFormula(path: string): Formula =
   if not fileExists(path):
-    raise newException(FormulaNotFoundEception, "Formula file $# does not exist" % path)
+    raise newException(IOError, "Formula file $# does not exist" % path)
   result.loads(readFile(path))
 
 proc getVersion(formula: Formula): string =
@@ -15,7 +15,7 @@ proc getVersion(formula: Formula): string =
   of NRE:
     result = engine_nre.fetchVersion(formula)
   else:
-    raise newException(EngineNotFoundException, "Engine $# is not defined yet" % $formula.engine)
+    raise newException(ValueError, "Engine $# is not defined yet" % $formula.engine)
 
 proc loadForumlas(): Table[string, Formula] =
   ## Load all defined formulas for syntax checking...

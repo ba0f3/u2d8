@@ -15,6 +15,3 @@ type
 
     lastUpdated: TimeInfo
 
-
-  EngineNotFoundException* = IOError
-  FormulaNotFoundEception* = IOError
