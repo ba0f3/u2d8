@@ -1,8 +1,6 @@
 import ../rethinkdb.nim/rethinkdb, sam, os, strutils, tables, times, asyncdispatch
 import private/types, private/engines/engine_nre
 
-#type
-#  fetchVersion*: proc(formula: Formula): string {.nimcall, gcsafe.}
 
 proc parseFormula(path: string): Formula =
   if not fileExists(path):
@@ -23,15 +21,21 @@ proc loadForumlas(): Table[string, Formula] =
   var formula: Formula
 
   for file in walkFiles("formula/*.json"):
-    formula = parseFormula(file)
-    result[formula.name] = formula
+    try:
+      formula = parseFormula(file)
+      result[formula.name] = formula
+    except Exception as ex:
+      echo "Unable to parse formular file $#: $#" % [file, ex.msg]
 
 proc update() =
   var formulas = loadForumlas()
   for k, f in formulas.pairs():
     #var s = &*{"id": k, "name":  f.name, "description": f.desc, "homepage": f.homepage, "tags": f.tags, "version": "0.1.0", "lastCheckedAt": getLocalTime(getTime())}
-    echo f.name, " => ", getVersion(f)
-    #discard waitFor r.table("Software").insert([s]).run(r)
+    try:
+      echo f.name, " => ", getVersion(f)
+      #discard waitFor r.table("Software").insert([s]).run(r)
+    except Exception as ex:
+      echo "Unable to get version for $#: $#" % [f.name, ex.msg]
 
   #r.close()
 
