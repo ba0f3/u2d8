@@ -35,4 +35,4 @@ before_script:
   - cd ..
 script:
   - nimble build
-  - nim c -d:usePcreHeader -r up2d8.nim
+  - nim c -d:usePcreHeader -r u2d8.nim
