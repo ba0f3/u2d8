@@ -1,0 +1,9 @@
+{
+    "name": "keepassxc",
+    "desc": "KeePass Cross-Platform Community Edition",
+    "homepage": "https://keepassxc.org/",
+    "tags": ["password", "manager", "linux", "windows", "osx"],
+    "url": "https://keepassxc.org/download",
+    "pattern": "(?s)label\-success\">v[VERSION]<\/span>",
+    "engine": "nre"
+}
