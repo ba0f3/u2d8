@@ -12,7 +12,12 @@ proc getVersion(formula: Formula): Future[string] {.async.} =
   result = ""
   case formula.engine
   of NRE:
-    result = await engine_nre.fetchVersion(formula)
+    var fut = engine_nre.fetchVersion(formula)
+    yield fut
+    if fut.failed:
+      raise fut.error
+    else:
+      result = fut.read
   else:
     raise newException(ValueError, "Engine $# is not defined yet" % $formula.engine)
 
@@ -32,12 +37,14 @@ proc update(): Future[void] {.async.} =
   var formulas = loadForumlas()
   for k, f in formulas.pairs():
     #var s = &*{"id": k, "name":  f.name, "description": f.desc, "homepage": f.homepage, "tags": f.tags, "version": "0.1.0", "lastCheckedAt": getLocalTime(getTime())}
-    try:
-      var fut = getVersion(f)
-      let version = await fut
+    var fut = getVersion(f)
+    yield fut
+    if fut.failed:
+      echo "Unable to get version for $#: $#" % [f.name, fut.error.msg]
+    else:
+      let version = fut.read
       echo f.name, " => ", version
-    except:
-      echo "Unable to get version for $#" % f.name
+
       #discard waitFor r.table("Software").insert([s]).run(r)
   #r.close()
   done = true
