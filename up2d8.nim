@@ -1,17 +1,18 @@
 import ../rethinkdb.nim/rethinkdb, sam, os, strutils, tables, times, asyncdispatch, threadpool
 import private/types, private/engines/engine_nre
 
+var done = false
 
 proc parseFormula(path: string): Formula =
   if not fileExists(path):
     raise newException(IOError, "Formula file $# does not exist" % path)
   result.loads(readFile(path))
 
-proc getVersion(formula: Formula): string =
+proc getVersion(formula: Formula): Future[string] {.async.} =
   result = ""
   case formula.engine
   of NRE:
-    result = engine_nre.fetchVersion(formula)
+    result = await engine_nre.fetchVersion(formula)
   else:
     raise newException(ValueError, "Engine $# is not defined yet" % $formula.engine)
 
@@ -27,17 +28,22 @@ proc loadForumlas(): Table[string, Formula] =
     except Exception as ex:
       echo "Unable to parse formular file $#: $#" % [file, ex.msg]
 
-proc update() =
+proc update(): Future[void] {.async.} =
   var formulas = loadForumlas()
   for k, f in formulas.pairs():
     #var s = &*{"id": k, "name":  f.name, "description": f.desc, "homepage": f.homepage, "tags": f.tags, "version": "0.1.0", "lastCheckedAt": getLocalTime(getTime())}
     try:
-      echo f.name, " => ", getVersion(f)
+      var fut = getVersion(f)
+      let version = await fut
+      echo f.name, " => ", version
+    except:
+      echo "Unable to get version for $#" % f.name
       #discard waitFor r.table("Software").insert([s]).run(r)
-    except Exception as ex:
-      echo "Unable to get version for $#: $#" % [f.name, ex.msg]
-
   #r.close()
+  done = true
 
 when isMainModule:
-  update()
+  asyncCheck update()
+  while not done:
+    poll()
+  #runForever()
