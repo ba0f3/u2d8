@@ -1,0 +1,9 @@
+{
+    "name": "nim",
+    "desc": "Nim is a systems and applications programming language.",
+    "homepage": "https://nim-lang.org",
+    "tags": ["language", "compiler", "metaprogramming", "macos", "linux", "windows", "nim"],
+    "url": "https://nim-lang.org/install_unix.html",
+    "pattern": "nim\-[VERSION]\.tar\.xz",
+    "engine": "nre"
+}
