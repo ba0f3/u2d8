@@ -1,4 +1,4 @@
-import ../rethinkdb.nim/rethinkdb, sam, os, strutils, tables, times, asyncdispatch
+import ../rethinkdb.nim/rethinkdb, sam, os, strutils, tables, times, asyncdispatch, threadpool
 import private/types, private/engines/engine_nre
 
 
